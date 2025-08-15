@@ -1,0 +1,27 @@
+# ---------------------------------------------
+# Overleaf Extended Image with Additional LaTeX Packages
+# ---------------------------------------------
+
+ARG OVERLEAF_BASE_TAG=sharelatex/sharelatex:latest
+FROM $OVERLEAF_BASE_TAG
+
+# Install additional LaTeX packages
+# ---------------------------------
+# This installs commonly used LaTeX packages that are not included
+# in the basic TeX Live installation
+
+ARG TEXLIVE_MIRROR=https://mirror.ox.ac.uk/sites/ctan.org/systems/texlive/tlnet
+
+RUN tlmgr update --self || true \
+&&  tlmgr install --repository ${TEXLIVE_MIRROR} extsizes || true \
+&&  tlmgr install --repository ${TEXLIVE_MIRROR} memoir || true \
+&&  tlmgr install --repository ${TEXLIVE_MIRROR} beamer || true \
+&&  tlmgr install --repository ${TEXLIVE_MIRROR} mathtools || true \
+&&  tlmgr install --repository ${TEXLIVE_MIRROR} subfig || true \
+&&  tlmgr install --repository ${TEXLIVE_MIRROR} booktabs || true \
+&&  tlmgr install --repository ${TEXLIVE_MIRROR} enumitem || true \
+&&  tlmgr path add
+
+EXPOSE 80
+
+ENTRYPOINT ["/sbin/my_init"]
